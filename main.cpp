@@ -21,7 +21,8 @@ extern "C" {
 #define obpos(s) (opos(s) / BLOCK_SIZE)
 #define ibpos(s) (ipos(s) / BLOCK_SIZE)
 
-synthErrno     main2();
+synthErrno     flashImage();
+synthErrno     writeImage();
 void           copyStream(std::ofstream& pOfstream, std::ifstream& pIfstream);
 void           writeFileToOfstream(std::ofstream& pOfstream, const char* pFile);
 void           padStream(std::ostream& pOstream, size_t pTo);
@@ -65,14 +66,30 @@ void copyStream(std::ofstream& pOfstream, std::ifstream& pIfstream)
     }
 }
 
-int main()
+int main(int pArgc, char* pArgv[])
 {
-    auto ret = main2();
+    const auto firstArg = std::string(pArgv[1]);
+
+    synthErrno ret;
+    if (firstArg == "-w")
+    {
+        ret = writeImage();
+    }
+    else if (firstArg == "-f")
+    {
+        ret = flashImage();
+    }
+    else
+    {
+        printf("Invalid argument.\n");
+        ret = SERR_CMD_INVALID_ARGUMENT;
+    }
+
     printf("Exiting with status %d\n", ret);
     return ret;
 }
 
-synthErrno main2()
+synthErrno writeImage()
 {
     solfegeInit();
 
@@ -89,7 +106,7 @@ synthErrno main2()
     u32 currentInstrumentId      = 0;
 
     u32 singleInstrumentCount = 0;
-    u32 multiInstrumentCount = 0;
+    u32 multiInstrumentCount  = 0;
 
     for (const auto& ent : std::filesystem::directory_iterator("instruments"))
     {
@@ -297,7 +314,7 @@ synthErrno main2()
         std::vector<std::vector<sfsHoldBehaviour>> holdBehaviours(singleInstrumentCount);
 
         sfsHoldBehaviour dummyHold = {};
-        dummyHold.instrumentId = SFS_INVALID_INSTRUMENT_ID;
+        dummyHold.instrumentId     = SFS_INVALID_INSTRUMENT_ID;
 
         for (size_t i = 0; i < singleInstrumentCount; i++)
         {
@@ -383,7 +400,7 @@ synthErrno main2()
 
     // pcm data
     {
-        auto pcmStart = obpos(sfsImgOut);
+        auto pcmStart            = obpos(sfsImgOut);
         header.pcmDataBlockStart = pcmStart;
 
         for (auto& sample : samplePool)
@@ -399,7 +416,7 @@ synthErrno main2()
 
     // string LUT
     {
-        auto lutStart = obpos(sfsImgOut);
+        auto lutStart              = obpos(sfsImgOut);
         header.stringLutBlockStart = lutStart;
 
         u32 offset = 0;
@@ -414,7 +431,7 @@ synthErrno main2()
 
     // string data
     {
-        auto strDataStart = obpos(sfsImgOut);
+        auto strDataStart           = obpos(sfsImgOut);
         header.stringDataBlockStart = strDataStart;
 
         for (const auto& name : namePool)
@@ -427,7 +444,7 @@ synthErrno main2()
 
     // sfsSingleInstrument data
     {
-        auto instrumentInfoStart = obpos(sfsImgOut);
+        auto instrumentInfoStart            = obpos(sfsImgOut);
         header.instrumentInfoDataBlockStart = instrumentInfoStart;
 
         for (const auto& instrument : singleInstrumentPool)
@@ -440,7 +457,7 @@ synthErrno main2()
 
     // sfsSingleSample data
     {
-        auto sampleInfoStart = obpos(sfsImgOut);
+        auto sampleInfoStart        = obpos(sfsImgOut);
         header.sampleDataBlockStart = sampleInfoStart;
 
         for (const auto& sample : samplePool)
@@ -451,9 +468,9 @@ synthErrno main2()
         padStream(sfsImgOut, BLOCK_SIZE);
     }
 
-    header.instrumentCount = instrumentCount;
+    header.instrumentCount       = instrumentCount;
     header.singleInstrumentCount = singleInstrumentCount;
-    header.multiInstrumentCount = multiInstrumentCount;
+    header.multiInstrumentCount  = multiInstrumentCount;
 
     sfsImgOut.seekp(0, std::ios_base::beg);
     sfsImgOut.write((str)&header, sizeof(header));
@@ -461,4 +478,33 @@ synthErrno main2()
     sfsImgOut.close();
 
     return SERR_OK;
+}
+
+synthErrno flashImage()
+{
+    system("wmic diskdrive list brief");
+    printf("Select physical drive: ");
+
+    char pDriveBuf[32];
+    gets(pDriveBuf);
+
+    char drive = pDriveBuf[0];
+
+    printf("Flashing drive %c. Confirm (yes): ", drive);
+
+    char input[32];
+    gets(input);
+
+    if (input != std::string("yes"))
+    {
+        printf("Aborting.\n");
+        return SERR_OK;
+    }
+
+    printf("Flashing...\n");
+
+    char cmd[256];
+    sprintf(cmd, "physdiskwrite -u -d %c synth.bin", drive);
+    printf("Running command: '%s'\n", cmd);
+    return (synthErrno)system(cmd);
 }
