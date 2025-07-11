@@ -1,0 +1,34 @@
+{
+    "bouzouki.*": [
+        {
+            "triggerTime": 0.65,
+            "maxTriggerTime": 1.1,
+            "transitionTime": 0.15,
+            "instrument": "bouzouki-gliss-down-from"
+        },
+        {
+            "triggerTime": 0.65,
+            "maxTriggerTime": 1.1,
+            "transitionTime": 0.15,
+            "instrument": "bouzouki-gliss-down-to"
+        },
+        {
+            "triggerTime": 0.65,
+            "maxTriggerTime": 1.1,
+            "transitionTime": 0.15,
+            "instrument": "bouzouki-gliss-up-from"
+        },
+        {
+            "triggerTime": 0.65,
+            "maxTriggerTime": 1.1,
+            "transitionTime": 0.15,
+            "instrument": "bouzouki-gliss-up-to"
+        },
+        {
+            "triggerTime": 0.65,
+            "maxTriggerTime": 1.1,
+            "transitionTime": 0.15,
+            "instrument": "bouzouki-tremolo"
+        }
+    ]
+}

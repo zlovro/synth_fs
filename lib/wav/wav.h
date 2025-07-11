@@ -6,7 +6,6 @@
 #define WAV_H
 
 #include <types.h>
-#include <fatfs/ff.h>
 
 #define WAV_SAMPLE_RATE 48000
 #define WAV_SAMPLE_SIZE_BITS 16
@@ -33,33 +32,32 @@ typedef struct
     u32 magicData; // should be "data"
     u32 dataSize;
 } wavHeader;
-
-typedef struct
-{
-    wavHeader info;
-    char*     path;
-    u32       chunkSize;
-    u32       chunkCount;
-    u32       remainingBytes;
-    FIL       fp;
-} wavFile;
-
-typedef enum
-{
-    WAV_OK,
-    WAV_ERR_FILE_NOT_PRESENT,
-    WAV_ERR_IO,
-    WAV_ERR_READ_READ_MISMATCH,
-    WAV_ERR_MAGIC,
-    WAV_ERR_WRONG_CHANNEL_COUNT,
-    WAV_ERR_WRONG_SAMPLE_SIZE,
-    WAV_ERR_WRONG_SAMPLE_RATE,
-    WAV_ERR_SEEK,
-} wavStatus;
-
-// the wav file needs to be as minimal as possible. achieved by running command 'ffmpeg -i "input.wav" -bitexact -ac 1 -map_metadata -1 "output.wav"
-wavStatus wavLoadFile(wavFile* pOut, char* pPath, u32 pChunkSize);
-wavStatus wavLoadChunk(wavFile* pFile, u32 chunkIndex, void* pOut, u32* pNumRead);
-wavStatus wavUnloadFile(wavFile* pFile);
+//
+// typedef struct
+// {
+//     wavHeader info;
+//     char*     path;
+//     u32       chunkSize;
+//     u32       chunkCount;
+//     u32       remainingBytes;
+// } wavFile;
+//
+// typedef enum
+// {
+//     WAV_OK,
+//     WAV_ERR_FILE_NOT_PRESENT,
+//     WAV_ERR_IO,
+//     WAV_ERR_READ_READ_MISMATCH,
+//     WAV_ERR_MAGIC,
+//     WAV_ERR_WRONG_CHANNEL_COUNT,
+//     WAV_ERR_WRONG_SAMPLE_SIZE,
+//     WAV_ERR_WRONG_SAMPLE_RATE,
+//     WAV_ERR_SEEK,
+// } wavStatus;
+//
+// // the wav file needs to be as minimal as possible. achieved by running command 'ffmpeg -i "input.wav" -bitexact -ac 1 -map_metadata -1 "output.wav"
+// wavStatus wavLoadFile(wavFile* pOut, char* pPath, u32 pChunkSize);
+// wavStatus wavLoadChunk(wavFile* pFile, u32 chunkIndex, void* pOut, u32* pNumRead);
+// wavStatus wavUnloadFile(wavFile* pFile);
 
 #endif //WAV_H
