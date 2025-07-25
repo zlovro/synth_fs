@@ -1,3 +1,5 @@
+#define DESKTOP
+
 #include <cstdlib>
 #include <cstdio>
 #include <filesystem>
@@ -6,12 +8,12 @@
 #include <vector>
 
 #include "json/json.hpp"
-#include "wav/wav.h"
 
 extern "C" {
 #include "sfs/sfs.h"
 #include "types.h"
 #include "solfege/solfege.h"
+#include "wav/wav.h"
 }
 
 #define DESKTOP
@@ -372,15 +374,15 @@ synthErrno writeImage() {
                 u32 dataSize;
                 fileStream.read((str) &dataSize, 4);
 
-                u32 fileSampleCount = dataSize / 2;
+                u32 sampleLengthSamples = dataSize / 2;
 
-                f32 sampleLengthSeconds    = fileSampleCount / SFS_SAMPLERATE_F32;
-                instrument.fadeTimeDefault = sampleLengthSeconds;
+                f32 sampleLengthSeconds    = sampleLengthSamples / SFS_SAMPLERATE_F32;
+                // instrument.fadeTimeDefault = sampleLengthSeconds;
 
                 sfsInstrumentSample sample = {};
 
-                sample.pcmDataLengthSamples = fileSampleCount;
-                sample.pcmDataBlockOffset  = currentSampleBlockOffset;
+                sample.pcmDataLengthSamples = sampleLengthSamples;
+                sample.pcmDataBlockOffset   = currentSampleBlockOffset;
 
                 currentSampleBlockOffset += roundUpTo(dataSize, BLOCK_SIZE) / BLOCK_SIZE;
 
@@ -393,7 +395,7 @@ synthErrno writeImage() {
                         if (preset == "until end")
                         {
                             sample.loopStart    = 0;
-                            sample.loopDuration = sampleLengthSeconds;
+                            sample.loopDuration = sampleLengthSamples;
                         }
                         else if (preset == "until half")
                         {
@@ -433,15 +435,15 @@ synthErrno writeImage() {
                 u32 amp1 = 0, amp2 = 0;
 
                 constexpr int expectedAverageAmplitudeArea = 10000;
-                int averageAmplitudeArea;
+                int           averageAmplitudeArea;
 
-                if (fileSampleCount > expectedAverageAmplitudeArea * 2)
+                if (sampleLengthSamples > expectedAverageAmplitudeArea * 2)
                 {
                     averageAmplitudeArea = expectedAverageAmplitudeArea;
                 }
                 else
                 {
-                    averageAmplitudeArea = fileSampleCount / 2 - 1;
+                    averageAmplitudeArea = sampleLengthSamples / 2 - 1;
                 }
 
                 for (size_t i = 0; i < averageAmplitudeArea; i++)
@@ -600,10 +602,10 @@ synthErrno writeImage() {
         for (auto pcm: sampleDataPool)
         {
             sfsImgOut.write((str) pcm.data(), pcm.size());
+            padStream(sfsImgOut, BLOCK_SIZE);
         }
 
-        printf("\t- Written %s of PCM data.\n\t- - - - - - - - - - -\n",
-               bytesToStr((size_t) sfsImgOut.tellp() - p0).c_str());
+        printf("\t- Written %s of PCM data.\n\t- - - - - - - - - - -\n", bytesToStr((size_t) sfsImgOut.tellp() - p0).c_str());
     }
 
     // string LUT
@@ -906,32 +908,12 @@ synthErrno extractImage() {
 
                     auto pcmSize = sample.pcmDataLengthSamples * SAMPLE_SIZE;
 
-                    wavHeader wavHdr     = {};
-                    wavHdr.magicRiff     = WAV_MAGIC_RIFF;
-                    wavHdr.sizeMinus8    = pcmSize;
-                    wavHdr.magicWave     = WAV_MAGIC_WAVE;
-                    wavHdr.magicFmt      = WAV_MAGIC_FMT;
-                    wavHdr.sectionSize   = 16;
-                    wavHdr.type          = 1;
-                    wavHdr.channels      = 1;
-                    wavHdr.sampleFreq    = SFS_SAMPLERATE;
-                    wavHdr.dataRate      = (wavHdr.channels * wavHdr.sampleFreq * wavHdr.bitsPerSample) / 8;
-                    wavHdr.align         = (wavHdr.channels * wavHdr.bitsPerSample) / 8;
-                    wavHdr.bitsPerSample = 16;
-                    wavHdr.magicData     = WAV_MAGIC_DATA;
-                    wavHdr.dataSize      = pcmSize;
-
-                    wav.write((char *) &wavHdr, sizeof(wavHdr));
-
                     fileStream.seekg(BLOCK_SIZE * sample.pcmDataBlockOffset, std::ios::beg);
 
                     auto buf = new u8[pcmSize];
                     fileStream.read((str) buf, pcmSize);
 
-                    wav.write((str) buf, pcmSize);
-                    delete[] buf;
-
-                    wav.close();
+                    wavWriteFileDefault(wavFile.generic_string().c_str(), buf, pcmSize);
                 }
 
                 if (instruments->soundType & SFS_SOUND_TYPE_LOOP)

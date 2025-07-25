@@ -3,92 +3,44 @@
 //
 
 #include "wav.h"
-//
-// #include <string.h>
-// #include <fatfs/ff.h>
-//
-// wavStatus wavLoadFile(wavFile* pOut, char* pPath, u32 pChunkSize)
-// {
-//     FIL     fp;
-//     FRESULT res = f_open(&fp, pPath, FA_READ);
-//     if (res != FR_OK)
-//     {
-//         return WAV_ERR_FILE_NOT_PRESENT;
-//     }
-//
-//     pOut->path      = pPath;
-//     pOut->chunkSize = pChunkSize;
-//
-//     memcpy(&pOut->fp, &fp, sizeof(FIL));
-//
-//     UINT bytesRead;
-//     res = f_read(&fp, &pOut->info, sizeof(wavHeader), &bytesRead);
-//     if (res != FR_OK)
-//     {
-//         return WAV_ERR_IO;
-//     }
-//
-//     if (bytesRead != sizeof(wavHeader))
-//     {
-//         return WAV_ERR_READ_READ_MISMATCH;
-//     }
-//
-//     if (pOut->info.magicData != WAV_MAGIC_DATA || pOut->info.magicFmt != WAV_MAGIC_FMT || pOut->info.magicRiff != WAV_MAGIC_RIFF || pOut->info.magicWave != WAV_MAGIC_WAVE)
-//     {
-//         return WAV_ERR_MAGIC;
-//     }
-//
-//     if (pOut->info.channels != WAV_CHANNEL_COUNT)
-//     {
-//         return WAV_ERR_WRONG_CHANNEL_COUNT;
-//     }
-//
-//     if (pOut->info.bitsPerSample != WAV_SAMPLE_SIZE_BITS)
-//     {
-//         return WAV_ERR_WRONG_SAMPLE_SIZE;
-//     }
-//
-//     if (pOut->info.sampleFreq != WAV_SAMPLE_RATE)
-//     {
-//         return WAV_ERR_WRONG_SAMPLE_RATE;
-//     }
-//
-//     u32 dataSize = f_size(&fp);
-//
-//     pOut->chunkCount     = dataSize / pChunkSize;
-//     pOut->remainingBytes = dataSize % pChunkSize;
-//
-//     return WAV_OK;
-// }
-//
-// wavStatus wavLoadChunk(wavFile* pFile, u32 chunkIndex, void* pOut, u32* pNumRead)
-// {
-//     FRESULT res = f_lseek(&pFile->fp, chunkIndex * pFile->chunkSize);
-//     if (res != FR_OK)
-//     {
-//         return WAV_ERR_SEEK;
-//     }
-//
-//     UINT readBytes;
-//     u32  toRead = chunkIndex == pFile->chunkCount - 1 ? pFile->remainingBytes : pFile->chunkSize;
-//     res = f_read(&pFile->fp, pOut, toRead, &readBytes);
-//
-//     if (res != FR_OK)
-//     {
-//         return WAV_ERR_IO;
-//     }
-//
-//     if (toRead != readBytes)
-//     {
-//         return WAV_ERR_READ_READ_MISMATCH;
-//     }
-//
-//     *pNumRead = readBytes;
-//
-//     return WAV_OK;
-// }
-//
-// wavStatus wavUnloadFile(wavFile* pFile)
-// {
-//     return f_close(&pFile->fp) == FR_OK ? WAV_OK : WAV_ERR_IO;
-// }
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+u32 wavWrite(u8 *pDst, u8 pBitsPerSample, u8 pChannels, u32 pSampleRate, u8 *pPcmData, u32 pPcmDataLength) {
+    u32 wavSize = sizeof(wavHeader) + pPcmDataLength;
+
+    wavHeader wavHdr     = {};
+    wavHdr.magicRiff     = WAV_MAGIC_RIFF;
+    wavHdr.sizeMinus8    = wavSize - 8;
+    wavHdr.magicWave     = WAV_MAGIC_WAVE;
+    wavHdr.magicFmt      = WAV_MAGIC_FMT;
+    wavHdr.sectionSize   = 16;
+    wavHdr.type          = 1;
+    wavHdr.channels      = pChannels;
+    wavHdr.sampleFreq    = pSampleRate;
+    wavHdr.bitsPerSample = pBitsPerSample;
+    wavHdr.dataRate      = (wavHdr.channels * wavHdr.sampleFreq * wavHdr.bitsPerSample) / 8;
+    wavHdr.align         = (wavHdr.channels * wavHdr.bitsPerSample) / 8;
+    wavHdr.magicData     = WAV_MAGIC_DATA;
+    wavHdr.dataSize      = pPcmDataLength;
+
+    memcpy(pDst, (u8 *) &wavHdr, sizeof(wavHeader));
+    memcpy(pDst + sizeof(wavHeader), pPcmData, pPcmDataLength);
+
+    return wavSize;
+}
+
+#ifdef DESKTOP
+void wavWriteFile(const char *pFilePath, u8 pBitsPerSample, u8 pChannels, u32 pSampleRate, u8 *pPcmData, u32 pPcmDataLength) {
+    u32 size = sizeof(wavHeader) + pPcmDataLength;
+    u8* dat = malloc(size);
+    wavWrite(dat, pBitsPerSample, pChannels, pSampleRate, pPcmData, pPcmDataLength);
+
+    FILE *fp = fopen(pFilePath, "wb");
+    fwrite(dat, 1, size, fp);
+    free(dat);
+    fclose(fp);
+}
+#endif

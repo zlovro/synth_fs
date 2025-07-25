@@ -55,9 +55,13 @@ typedef struct
 //     WAV_ERR_SEEK,
 // } wavStatus;
 //
-// // the wav file needs to be as minimal as possible. achieved by running command 'ffmpeg -i "input.wav" -bitexact -ac 1 -map_metadata -1 "output.wav"
-// wavStatus wavLoadFile(wavFile* pOut, char* pPath, u32 pChunkSize);
-// wavStatus wavLoadChunk(wavFile* pFile, u32 chunkIndex, void* pOut, u32* pNumRead);
-// wavStatus wavUnloadFile(wavFile* pFile);
+
+// size of pdst must be >= sizeof(wavHeader) + pPcmDataLength
+u32 wavWrite(u8* pDst, u8 pBitsPerSample, u8 pChannels, u32 pSampleRate, u8* pPcmData, u32 pPcmDataLength);
+
+#ifdef DESKTOP
+void wavWriteFile(const char* pFilePath, u8 pBitsPerSample, u8 pChannels, u32 pSampleRate, u8* pPcmData, u32 pPcmDataLength);
+#define wavWriteFileDefault(f, dat, datsize) wavWriteFile(f, 16, 1, 48000, dat, datsize)
+#endif
 
 #endif //WAV_H

@@ -30,30 +30,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1cf9040-5bad-4699-9080-dda274002fff" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pitch_detect.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/renamer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shifter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/workdir/instruments/hold.json" afterDir="false" />
+    <list default="true" id="a1cf9040-5bad-4699-9080-dda274002fff" name="Changes" comment="pcmDataLengthBlocks --&gt; pcmDataLengthSamples">
       <change afterPath="$PROJECT_DIR$/workdir/synth-font" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/workdir/synth.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/synth-fs.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/sfs/synth_fs.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/sfs/synth_fs.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/wav/wav.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/wav/wav.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/wav/wav.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/wav/wav.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/loop_detection.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/loop_detection.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/sfs/sfs.c" beforeDir="false" afterPath="$PROJECT_DIR$/lib/sfs/sfs.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/sfs/sfs.h" beforeDir="false" afterPath="$PROJECT_DIR$/lib/sfs/sfs.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,6 +53,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -130,6 +118,65 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="synth-fs" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Autodetect">
+      <module name="synth-fs" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <module name="synth-fs" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -166,8 +213,25 @@
       <workItem from="1751385352557" duration="235000" />
       <workItem from="1751400168724" duration="60000" />
       <workItem from="1751887774623" duration="16000" />
-      <workItem from="1752242224932" duration="1000" />
+      <workItem from="1752242224932" duration="1936000" />
+      <workItem from="1752319404898" duration="1653000" />
+      <workItem from="1752329687600" duration="999000" />
+      <workItem from="1752499779874" duration="604000" />
+      <workItem from="1753217758594" duration="818000" />
+      <workItem from="1753361373555" duration="17000" />
+      <workItem from="1753361802291" duration="20000" />
+      <workItem from="1753442207609" duration="1222000" />
+      <workItem from="1753447921509" duration="716000" />
     </task>
+    <task id="LOCAL-00001" summary="pcmDataLengthBlocks --&gt; pcmDataLengthSamples">
+      <option name="closed" value="true" />
+      <created>1752242672395</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1752242672395</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -177,6 +241,10 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="pcmDataLengthBlocks --&gt; pcmDataLengthSamples" />
+    <option name="LAST_COMMIT_MESSAGE" value="pcmDataLengthBlocks --&gt; pcmDataLengthSamples" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

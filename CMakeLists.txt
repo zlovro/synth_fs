@@ -10,9 +10,9 @@ include_directories(lib)
 include_directories(lib/synthinf)
 
 add_executable(synth_fs
-        main.cpp
         lib/solfege/solfege.c
         lib/json/json.hpp
-        main.cpp
+        lib/wav/wav.c
         lib/synthinf/serrno.c
+        main.cpp
 )
